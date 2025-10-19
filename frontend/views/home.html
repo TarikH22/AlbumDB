@@ -1,0 +1,101 @@
+<div class="home-view">
+    <!-- Hero Section -->
+    <section class="hero-section text-white text-center py-5">
+        <div class="container">
+            <h1 class="display-3 fw-bold mb-3">
+                <i class="bi bi-vinyl-fill"></i> AlbumRate
+            </h1>
+            <p class="lead mb-4">Discover, Rate, and Review Your Favorite Music Albums</p>
+            <div class="search-bar-hero mx-auto" style="max-width: 600px;">
+                <div class="input-group input-group-lg">
+                    <input type="text" class="form-control" placeholder="Search for albums, artists..." id="hero-search">
+                    <button class="btn btn-primary" type="button">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Albums Section -->
+    <section class="featured-albums py-5">
+        <div class="container">
+            <h2 class="mb-4">
+                <i class="bi bi-star-fill text-warning"></i> Featured Albums
+            </h2>
+            <div class="row" id="featured-albums-container">
+                <!-- Albums will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Rated Albums Section -->
+    <section class="top-rated-albums py-5 bg-light">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="bi bi-trophy-fill text-warning"></i> Top Rated Albums
+                </h2>
+                <a href="#top-rated" class="btn btn-outline-primary">View All</a>
+            </div>
+            <div class="row" id="top-rated-albums-container">
+                <!-- Albums will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Recently Reviewed Section -->
+    <section class="recent-reviews py-5">
+        <div class="container">
+            <h2 class="mb-4">
+                <i class="bi bi-clock-history"></i> Recent Reviews
+            </h2>
+            <div class="row" id="recent-reviews-container">
+                <!-- Reviews will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories py-5 bg-light">
+        <div class="container">
+            <h2 class="mb-4">
+                <i class="bi bi-music-note-list"></i> Browse by Genre
+            </h2>
+            <div class="row g-3">
+                <div class="col-md-3 col-sm-6">
+                    <a href="#search?genre=rock" class="genre-card card text-center h-100">
+                        <div class="card-body">
+                            <i class="bi bi-soundwave fs-1 text-primary"></i>
+                            <h5 class="mt-3">Rock</h5>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <a href="#search?genre=pop" class="genre-card card text-center h-100">
+                        <div class="card-body">
+                            <i class="bi bi-disc fs-1 text-danger"></i>
+                            <h5 class="mt-3">Pop</h5>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <a href="#search?genre=hiphop" class="genre-card card text-center h-100">
+                        <div class="card-body">
+                            <i class="bi bi-music-note-beamed fs-1 text-success"></i>
+                            <h5 class="mt-3">Hip Hop</h5>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <a href="#search?genre=electronic" class="genre-card card text-center h-100">
+                        <div class="card-body">
+                            <i class="bi bi-volume-up fs-1 text-info"></i>
+                            <h5 class="mt-3">Electronic</h5>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
