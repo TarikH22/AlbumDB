@@ -1,0 +1,63 @@
+<div class="top-rated-view">
+    <div class="container mt-4">
+        <!-- Page Header -->
+        <div class="page-header mb-4">
+            <h1 class="display-4 fw-bold">
+                <i class="bi bi-trophy-fill text-warning"></i> Top Rated Albums
+            </h1>
+            <p class="lead text-muted">The highest rated albums by our community</p>
+        </div>
+
+        <!-- Filter Options -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="timeframe-select" class="form-label">Timeframe</label>
+                        <select class="form-select" id="timeframe-select">
+                            <option value="all">All Time</option>
+                            <option value="year">This Year</option>
+                            <option value="month">This Month</option>
+                            <option value="week">This Week</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="genre-select" class="form-label">Genre</label>
+                        <select class="form-select" id="genre-select">
+                            <option value="">All Genres</option>
+                            <option value="rock">Rock</option>
+                            <option value="pop">Pop</option>
+                            <option value="hiphop">Hip Hop</option>
+                            <option value="electronic">Electronic</option>
+                            <option value="jazz">Jazz</option>
+                            <option value="classical">Classical</option>
+                            <option value="country">Country</option>
+                            <option value="rnb">R&B</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="min-ratings" class="form-label">Min. Ratings</label>
+                        <select class="form-select" id="min-ratings">
+                            <option value="10">10+ ratings</option>
+                            <option value="50">50+ ratings</option>
+                            <option value="100">100+ ratings</option>
+                            <option value="500">500+ ratings</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Albums List -->
+        <div id="top-albums-list">
+            <!-- Albums will be loaded dynamically as a ranked list -->
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Top albums pagination" class="mt-4">
+            <ul class="pagination justify-content-center" id="pagination">
+                <!-- Pagination will be loaded dynamically -->
+            </ul>
+        </nav>
+    </div>
+</div>
