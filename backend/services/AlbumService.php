@@ -92,8 +92,15 @@ class AlbumService extends BaseService
 
     public function searchAlbums($searchTerm)
     {
-        if (empty($searchTerm) || strlen(trim($searchTerm)) < 2) {
-            return $this->errorResponse('Search term must be at least 2 characters');
+        $searchTerm = trim($searchTerm);
+
+        // If empty search, return all albums
+        if (empty($searchTerm)) {
+            return $this->getAllAlbums(100, 0);
+        }
+
+        if (strlen($searchTerm) < 1) {
+            return $this->errorResponse('Search term must be at least 1 character');
         }
 
         $albums = $this->albumDAO->search($this->sanitizeString($searchTerm));

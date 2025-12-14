@@ -153,6 +153,12 @@ const AppState = {
     userFavorites: []
 };
 
+// Initialize Spapp
+var app = $.spapp({
+    defaultView: "home",
+    templateDir: "./views/"
+});
+
 /**
  * Initialize the application
  */
@@ -160,27 +166,94 @@ function initApp() {
     // Register all routes
     registerRoutes();
 
-    // Initialize the router
-    SPARouter.init();
-
     // Set up event listeners
     setupEventListeners();
 
     // Check for stored user session
     checkUserSession();
+    
+    // Run the app
+    app.run();
 }
 
 /**
  * Register all application routes
  */
 function registerRoutes() {
-    SPARouter.register('home', 'home.html', loadHomePage);
-    SPARouter.register('login', 'login.html', loadLoginPage);
-    SPARouter.register('register', 'register.html', loadRegisterPage);
-    SPARouter.register('search', 'search.html', loadSearchPage);
-    SPARouter.register('profile', 'profile.html', loadProfilePage);
-    SPARouter.register('top-rated', 'top-rated.html', loadTopRatedPage);
-    SPARouter.register('album/:id', 'album-details.html', loadAlbumDetailsPage);
+    app.route({
+        view: "home",
+        load: "home.html",
+        onCreate: function() {},
+        onReady: function() { loadHomePage(); }
+    });
+    
+    app.route({
+        view: "login",
+        load: "login.html",
+        onCreate: function() {},
+        onReady: function() { loadLoginPage(); }
+    });
+    
+    app.route({
+        view: "register",
+        load: "register.html",
+        onCreate: function() {},
+        onReady: function() { loadRegisterPage(); }
+    });
+    
+    app.route({
+        view: "search",
+        load: "search.html",
+        onCreate: function() {},
+        onReady: function() { 
+            // Extract query parameters from hash (e.g., #search?q=test&genre=rock)
+            var hash = window.location.hash.slice(1);
+            var params = {};
+            if (hash.indexOf('?') > -1) {
+                var queryString = hash.split('?')[1];
+                queryString.split('&').forEach(function(param) {
+                    var parts = param.split('=');
+                    params[parts[0]] = decodeURIComponent(parts[1] || '');
+                });
+            }
+            loadSearchPage(params);
+        }
+    });
+    
+    app.route({
+        view: "profile",
+        load: "profile.html",
+        onCreate: function() {},
+        onReady: function() { loadProfilePage(); }
+    });
+    
+    app.route({
+        view: "top-rated",
+        load: "top-rated.html",
+        onCreate: function() {},
+        onReady: function() { loadTopRatedPage(); }
+    });
+    
+    app.route({
+        view: "album",
+        load: "album-details.html",
+        onCreate: function() {},
+        onReady: function() { 
+            // Extract album ID from hash (e.g., #album/123)
+            var hash = window.location.hash.slice(1);
+            var parts = hash.split('/');
+            if (parts.length > 1) {
+                loadAlbumDetailsPage({ id: parts[1] });
+            }
+        }
+    });
+    
+    app.route({
+        view: "admin",
+        load: "admin.html",
+        onCreate: function() {},
+        onReady: function() { loadAdminPage(); }
+    });
 }
 
 /**
@@ -197,7 +270,7 @@ function setupEventListeners() {
     $(document).on('click', '.hero-section .btn-primary', function() {
         const query = $('#hero-search').val();
         if (query) {
-            SPARouter.navigate('search', { query: query });
+            window.location.hash = 'search';
         }
     });
 }
@@ -232,8 +305,9 @@ function updateNavigation() {
 function logout() {
     AppState.currentUser = null;
     localStorage.removeItem('albumrate_user');
+    localStorage.removeItem('user_token');
     updateNavigation();
-    SPARouter.navigate('home');
+    window.location.hash = 'home';
 }
 
 /**
@@ -275,18 +349,31 @@ function generateStars(rating) {
  * Generate album card HTML
  */
 function generateAlbumCard(album) {
+    // Support both old (sample data) and new (backend) structure
+    const albumId = album.album_id || album.id;
+    
+    // Handle cover image URL - prepend base path if it's a relative URL starting with /covers/
+    let coverImage = album.cover_url || album.cover_image_url || album.cover || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="250" height="250"%3E%3Crect fill="%23ddd" width="250" height="250"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EAlbum Cover%3C/text%3E%3C/svg%3E';
+    if (coverImage && coverImage.startsWith('/covers/')) {
+        coverImage = '/milestone5/backend' + coverImage;
+    }
+    
+    const avgRating = parseFloat(album.avg_rating || album.average_rating || album.rating || 0);
+    const ratingCount = parseInt(album.rating_count || album.ratingCount || 0);
+    const displayRating = avgRating > 0 ? avgRating.toFixed(1) : 'N/A';
+    
     return `
         <div class="col-md-3 col-sm-6">
-            <a href="#album/${album.id}" class="text-decoration-none">
+            <a href="#album/${albumId}" class="text-decoration-none">
                 <div class="card album-card">
-                    <img src="${album.cover}" class="card-img-top" alt="${album.title}"
-                         onerror="this.src='https://via.placeholder.com/250x250?text=Album+Cover'">
+                    <img src="${coverImage}" class="card-img-top" alt="${album.title}"
+                         onerror="if(this.src.indexOf('data:image')===-1){this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22250%22 height=%22250%22%3E%3Crect fill=%22%23ddd%22 width=%22250%22 height=%22250%22/%3E%3Ctext fill=%22%23999%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3ENo Image%3C/text%3E%3C/svg%3E';}this.onerror=null;">
                     <div class="card-body">
                         <h5 class="album-title">${album.title}</h5>
                         <p class="album-artist">${album.artist}</p>
                         <div class="rating">
-                            <span class="rating-badge">${album.rating}/10</span>
-                            <small class="text-muted">(${album.ratingCount} ratings)</small>
+                            <span class="rating-badge">${displayRating}/10</span>
+                            <small class="text-muted">(${ratingCount} rating${ratingCount !== 1 ? 's' : ''})</small>
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,12 @@
 
 abstract class BaseService
 {
+    protected $dao;
+
+    public function add($entity)
+    {
+        return $this->dao->add($entity);
+    }
 
     protected function validateRequiredFields($data, $requiredFields)
     {

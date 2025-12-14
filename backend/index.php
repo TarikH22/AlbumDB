@@ -13,7 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require './vendor/autoload.php';
+require_once __DIR__ . '/config/Config.php';
+require_once __DIR__ . '/utils/Roles.php';
+require_once __DIR__ . '/middleware/AuthMiddleware.php';
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/routes/AuthRoutes.php';
 require_once __DIR__ . '/routes/AlbumRoutes.php';
 require_once __DIR__ . '/routes/UserRoutes.php';
 require_once __DIR__ . '/routes/RatingRoutes.php';

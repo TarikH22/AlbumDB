@@ -2,14 +2,17 @@
 
 require_once __DIR__ . '/BaseDAO.php';
 
-class ReviewDAO extends BaseDAO {
+class ReviewDAO extends BaseDAO
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->tableName = 'reviews';
     }
 
-    public function create($data) {
+    public function create($data)
+    {
         try {
             $sql = "INSERT INTO reviews (user_id, album_id, title, review_text)
                     VALUES (:user_id, :album_id, :title, :review_text)";
@@ -29,7 +32,8 @@ class ReviewDAO extends BaseDAO {
         }
     }
 
-    public function getById($reviewId) {
+    public function getById($reviewId)
+    {
         try {
             $sql = "SELECT review_id, user_id, album_id, title, review_text,
                            created_at, updated_at
@@ -44,7 +48,8 @@ class ReviewDAO extends BaseDAO {
     }
 
 
-    public function getByIdWithDetails($reviewId) {
+    public function getByIdWithDetails($reviewId)
+    {
         try {
             $sql = "SELECT r.*,
                            u.username, u.first_name, u.last_name, u.avatar_url,
@@ -63,7 +68,8 @@ class ReviewDAO extends BaseDAO {
     }
 
 
-    public function getByUserId($userId) {
+    public function getByUserId($userId)
+    {
         try {
             $sql = "SELECT r.*, a.title, a.artist, a.cover_url, a.year
                     FROM reviews r
@@ -80,7 +86,8 @@ class ReviewDAO extends BaseDAO {
     }
 
 
-    public function getByAlbumId($albumId, $orderBy = 'created_at') {
+    public function getByAlbumId($albumId, $orderBy = 'created_at')
+    {
         try {
             $allowedOrderBy = ['created_at', 'updated_at'];
             if (!in_array($orderBy, $allowedOrderBy)) {
@@ -101,7 +108,8 @@ class ReviewDAO extends BaseDAO {
         }
     }
 
-    public function getAll($limit = null, $offset = 0) {
+    public function getAll($limit = null, $offset = 0)
+    {
         try {
             $sql = "SELECT r.*,
                            u.username, u.first_name, u.last_name, u.avatar_url,
@@ -130,11 +138,12 @@ class ReviewDAO extends BaseDAO {
         }
     }
 
-    public function getRecent($limit = 10) {
+    public function getRecent($limit = 10)
+    {
         try {
             $sql = "SELECT r.*,
                            u.username, u.avatar_url,
-                           a.title, a.artist, a.cover_url
+                           a.title AS album_title, a.artist, a.cover_url
                     FROM reviews r
                     INNER JOIN users u ON r.user_id = u.user_id
                     INNER JOIN albums a ON r.album_id = a.album_id
@@ -151,7 +160,8 @@ class ReviewDAO extends BaseDAO {
         }
     }
 
-    public function getReviewCount($albumId) {
+    public function getReviewCount($albumId)
+    {
         try {
             $sql = "SELECT COUNT(*) FROM reviews WHERE album_id = ?";
             $stmt = $this->executeQuery($sql, [$albumId]);
@@ -162,7 +172,8 @@ class ReviewDAO extends BaseDAO {
         }
     }
 
-    public function getUserReviewCount($userId) {
+    public function getUserReviewCount($userId)
+    {
         try {
             $sql = "SELECT COUNT(*) FROM reviews WHERE user_id = ?";
             $stmt = $this->executeQuery($sql, [$userId]);
@@ -173,7 +184,8 @@ class ReviewDAO extends BaseDAO {
         }
     }
 
-    public function search($searchTerm) {
+    public function search($searchTerm)
+    {
         try {
             $sql = "SELECT r.*,
                            u.username, u.avatar_url,
@@ -192,7 +204,8 @@ class ReviewDAO extends BaseDAO {
         }
     }
 
-    public function hasUserReviewed($userId, $albumId) {
+    public function hasUserReviewed($userId, $albumId)
+    {
         try {
             $sql = "SELECT COUNT(*) FROM reviews WHERE user_id = ? AND album_id = ?";
             $stmt = $this->executeQuery($sql, [$userId, $albumId]);
@@ -203,8 +216,9 @@ class ReviewDAO extends BaseDAO {
         }
     }
 
- 
-    public function getUserReviewForAlbum($userId, $albumId) {
+
+    public function getUserReviewForAlbum($userId, $albumId)
+    {
         try {
             $sql = "SELECT r.*
                     FROM reviews r
@@ -218,7 +232,8 @@ class ReviewDAO extends BaseDAO {
         }
     }
 
-    public function update($reviewId, $data) {
+    public function update($reviewId, $data)
+    {
         try {
             $fields = [];
             $params = [':review_id' => $reviewId];
@@ -246,7 +261,8 @@ class ReviewDAO extends BaseDAO {
         }
     }
 
-    public function delete($reviewId) {
+    public function delete($reviewId)
+    {
         try {
             $sql = "DELETE FROM reviews WHERE review_id = :review_id";
             $this->executeQuery($sql, [':review_id' => $reviewId]);
@@ -257,7 +273,8 @@ class ReviewDAO extends BaseDAO {
         }
     }
 
-    public function deleteByUserId($userId) {
+    public function deleteByUserId($userId)
+    {
         try {
             $sql = "DELETE FROM reviews WHERE user_id = :user_id";
             $this->executeQuery($sql, [':user_id' => $userId]);
@@ -268,7 +285,8 @@ class ReviewDAO extends BaseDAO {
         }
     }
 
-    public function deleteByAlbumId($albumId) {
+    public function deleteByAlbumId($albumId)
+    {
         try {
             $sql = "DELETE FROM reviews WHERE album_id = :album_id";
             $this->executeQuery($sql, [':album_id' => $albumId]);
@@ -279,7 +297,8 @@ class ReviewDAO extends BaseDAO {
         }
     }
 
-    public function getMostReviewedAlbums($limit = 10) {
+    public function getMostReviewedAlbums($limit = 10)
+    {
         try {
             $sql = "SELECT a.album_id, a.title, a.artist, a.cover_url,
                            COUNT(r.review_id) as review_count
@@ -299,4 +318,3 @@ class ReviewDAO extends BaseDAO {
         }
     }
 }
-?>

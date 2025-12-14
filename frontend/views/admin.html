@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4"><i class="bi bi-gear-fill"></i> Admin Dashboard</h1>
+            <p class="lead">Manage albums, tracks, and monitor user activity</p>
+        </div>
+    </div>
+
+    <!-- Admin Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-music-note-list"></i> Total Albums</h5>
+                    <h2 id="admin-total-albums">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-people"></i> Total Users</h5>
+                    <h2 id="admin-total-users">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-star-fill"></i> Total Ratings</h5>
+                    <h2 id="admin-total-ratings">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-chat-left-text"></i> Total Reviews</h5>
+                    <h2 id="admin-total-reviews">0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="albums-tab" data-bs-toggle="tab" data-bs-target="#albums-panel" type="button" role="tab">
+                <i class="bi bi-vinyl"></i> Manage Albums
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tracks-tab" data-bs-toggle="tab" data-bs-target="#tracks-panel" type="button" role="tab">
+                <i class="bi bi-music-note"></i> Manage Tracks
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users-panel" type="button" role="tab">
+                <i class="bi bi-people"></i> Users
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="adminTabContent">
+        <!-- Albums Panel -->
+        <div class="tab-pane fade show active" id="albums-panel" role="tabpanel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Albums Management</h3>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
+                    <i class="bi bi-plus-circle"></i> Add New Album
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cover</th>
+                            <th>Title</th>
+                            <th>Artist</th>
+                            <th>Genre</th>
+                            <th>Year</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-albums-list">
+                        <tr>
+                            <td colspan="7" class="text-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tracks Panel -->
+        <div class="tab-pane fade" id="tracks-panel" role="tabpanel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Tracks Management</h3>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTrackModal">
+                    <i class="bi bi-plus-circle"></i> Add New Track
+                </button>
+            </div>
+            <div class="mb-3">
+                <label for="track-album-filter" class="form-label">Filter by Album:</label>
+                <select class="form-select" id="track-album-filter">
+                    <option value="">All Albums</option>
+                </select>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Track #</th>
+                            <th>Title</th>
+                            <th>Album</th>
+                            <th>Duration</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-tracks-list">
+                        <tr>
+                            <td colspan="6" class="text-center">Select an album or loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Users Panel -->
+        <div class="tab-pane fade" id="users-panel" role="tabpanel">
+            <h3 class="mb-3">User Management</h3>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-users-list">
+                        <tr>
+                            <td colspan="6" class="text-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Album Modal -->
+<div class="modal fade" id="addAlbumModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Album</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-album-form">
+                    <div class="mb-3">
+                        <label for="album-title" class="form-label">Title *</label>
+                        <input type="text" class="form-control" id="album-title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="album-artist" class="form-label">Artist *</label>
+                        <input type="text" class="form-control" id="album-artist" name="artist" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="album-genre" class="form-label">Genre *</label>
+                        <input type="text" class="form-control" id="album-genre" name="genre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="album-year" class="form-label">Year *</label>
+                        <input type="number" class="form-control" id="album-year" name="year" min="1900" max="2100" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="album-cover" class="form-label">Cover Image URL</label>
+                        <input type="url" class="form-control" id="album-cover" name="cover_image_url">
+                    </div>
+                    <div class="mb-3">
+                        <label for="album-description" class="form-label">Description</label>
+                        <textarea class="form-control" id="album-description" name="description" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="save-album-btn">Save Album</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Album Modal -->
+<div class="modal fade" id="editAlbumModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Album</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-album-form">
+                    <input type="hidden" id="edit-album-id" name="album_id">
+                    <div class="mb-3">
+                        <label for="edit-album-title" class="form-label">Title *</label>
+                        <input type="text" class="form-control" id="edit-album-title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-album-artist" class="form-label">Artist *</label>
+                        <input type="text" class="form-control" id="edit-album-artist" name="artist" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-album-genre" class="form-label">Genre *</label>
+                        <input type="text" class="form-control" id="edit-album-genre" name="genre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-album-year" class="form-label">Year *</label>
+                        <input type="number" class="form-control" id="edit-album-year" name="year" min="1900" max="2100" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-album-cover" class="form-label">Cover Image URL</label>
+                        <input type="url" class="form-control" id="edit-album-cover" name="cover_image_url">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-album-description" class="form-label">Description</label>
+                        <textarea class="form-control" id="edit-album-description" name="description" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="update-album-btn">Update Album</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Track Modal -->
+<div class="modal fade" id="addTrackModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Track</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-track-form">
+                    <div class="mb-3">
+                        <label for="track-album" class="form-label">Album *</label>
+                        <select class="form-select" id="track-album" name="album_id" required>
+                            <option value="">Select Album</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="track-number" class="form-label">Track Number *</label>
+                        <input type="number" class="form-control" id="track-number" name="track_number" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="track-title" class="form-label">Title *</label>
+                        <input type="text" class="form-control" id="track-title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="track-duration" class="form-label">Duration (mm:ss) *</label>
+                        <input type="text" class="form-control" id="track-duration" name="duration" placeholder="3:45" pattern="[0-9]{1,2}:[0-9]{2}" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="save-track-btn">Save Track</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Track Modal -->
+<div class="modal fade" id="editTrackModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Track</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-track-form">
+                    <input type="hidden" id="edit-track-id" name="track_id">
+                    <div class="mb-3">
+                        <label for="edit-track-number" class="form-label">Track Number *</label>
+                        <input type="number" class="form-control" id="edit-track-number" name="track_number" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-track-title" class="form-label">Title *</label>
+                        <input type="text" class="form-control" id="edit-track-title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-track-duration" class="form-label">Duration (mm:ss) *</label>
+                        <input type="text" class="form-control" id="edit-track-duration" name="duration" placeholder="3:45" pattern="[0-9]{1,2}:[0-9]{2}" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="update-track-btn">Update Track</button>
+            </div>
+        </div>
+    </div>
+</div>
