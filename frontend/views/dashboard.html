@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4"><i class="bi bi-speedometer2"></i> My Dashboard</h1>
+            <p class="lead">Welcome back, <span id="dashboard-username">User</span>!</p>
+        </div>
+    </div>
+
+    <!-- User Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-heart-fill"></i> Favorites</h5>
+                    <h2 id="dashboard-favorites-count">0</h2>
+                    <a href="#favorites" class="btn btn-light btn-sm mt-2">View All</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-star-fill"></i> Ratings</h5>
+                    <h2 id="dashboard-ratings-count">0</h2>
+                    <small>Avg: <span id="dashboard-avg-rating">0.0</span></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-chat-left-text"></i> Reviews</h5>
+                    <h2 id="dashboard-reviews-count">0</h2>
+                    <small>Written by you</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-music-note-list"></i> Discover</h5>
+                    <h2 id="dashboard-new-albums">0</h2>
+                    <small>New albums</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-clock-history"></i> Your Recent Ratings</h5>
+                </div>
+                <div class="card-body">
+                    <div id="dashboard-recent-ratings">
+                        <p class="text-center text-muted">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-chat-dots"></i> Your Recent Reviews</h5>
+                </div>
+                <div class="card-body">
+                    <div id="dashboard-recent-reviews">
+                        <p class="text-center text-muted">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Favorite Albums -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="bi bi-heart-fill"></i> Your Favorite Albums</h5>
+                </div>
+                <div class="card-body">
+                    <div id="dashboard-favorites" class="row">
+                        <p class="text-center text-muted">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-lightbulb"></i> Recommended for You</h5>
+                </div>
+                <div class="card-body">
+                    <div id="dashboard-recommendations" class="row">
+                        <p class="text-center text-muted">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-lightning-fill"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="#search" class="btn btn-outline-primary">
+                            <i class="bi bi-search"></i> Search Albums
+                        </a>
+                        <a href="#top-rated" class="btn btn-outline-success">
+                            <i class="bi bi-trophy"></i> Top Rated Albums
+                        </a>
+                        <a href="#profile" class="btn btn-outline-info">
+                            <i class="bi bi-person"></i> Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -75,7 +75,11 @@ const SPARouter = {
 
         if (!routeConfig) {
             console.error(`Route not found: ${route}`);
-            this.navigate('404');
+            console.log('Available routes:', Object.keys(this.routes));
+            // Prevent infinite loop - redirect to home without using navigate
+            if (route !== 'home') {
+                window.location.hash = 'home';
+            }
             return;
         }
 

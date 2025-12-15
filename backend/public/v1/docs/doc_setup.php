@@ -13,7 +13,7 @@ use OpenApi\Attributes as OA;
  *     )
  * ),
  * @OA\Server(
- *     url="http://localhost:8888/AlbumDB-main/backend",
+ *     url="http://localhost:8888/backend",
  *     description="Development server"
  * ),
  * @OA\SecurityScheme(

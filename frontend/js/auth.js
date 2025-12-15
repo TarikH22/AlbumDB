@@ -17,6 +17,15 @@ function loadLoginPage() {
 }
 
 /**
+ * Initialize UserService menu on page load
+ */
+$(document).ready(function() {
+    if (typeof UserService !== 'undefined') {
+        UserService.generateMenuItems();
+    }
+});
+
+/**
  * Load register page
  */
 function loadRegisterPage() {
@@ -35,38 +44,18 @@ function loadRegisterPage() {
 function handleLogin() {
     const email = $('#login-email').val();
     const password = $('#login-password').val();
-    const rememberMe = $('#remember-me').is(':checked');
 
-    // Simulate login (will be replaced with actual API call)
-    if (email && password) {
-        // Create mock user
-        const user = {
-            id: 1,
-            email: email,
-            username: email.split('@')[0],
-            firstName: 'John',
-            lastName: 'Doe',
-            avatar: 'https://via.placeholder.com/200x200?text=User'
-        };
-
-        // Store user in app state
-        AppState.currentUser = user;
-
-        // Store in localStorage if remember me is checked
-        if (rememberMe) {
-            localStorage.setItem('albumrate_user', JSON.stringify(user));
-        }
-
-        // Update navigation
-        updateNavigation();
-
-        // Show success message
-        showNotification('Login successful!', 'success');
-
-        // Redirect to home
-        SPARouter.navigate('home');
-    } else {
+    // Validation
+    if (!email || !password) {
         showNotification('Please fill in all fields', 'danger');
+        return;
+    }
+
+    // Call UserService login
+    if (typeof UserService !== 'undefined') {
+        UserService.login({ email: email, password: password });
+    } else {
+        showNotification('UserService not available', 'danger');
     }
 }
 
@@ -93,8 +82,8 @@ function handleRegister() {
         return;
     }
 
-    if (password.length < 8) {
-        showNotification('Password must be at least 8 characters', 'danger');
+    if (password.length < 6) {
+        showNotification('Password must be at least 6 characters', 'danger');
         return;
     }
 
@@ -103,28 +92,18 @@ function handleRegister() {
         return;
     }
 
-    // Simulate registration (will be replaced with actual API call)
-    const user = {
-        id: Date.now(),
-        email: email,
-        username: username,
-        firstName: firstName,
-        lastName: lastName,
-        avatar: 'https://via.placeholder.com/200x200?text=' + firstName.charAt(0) + lastName.charAt(0)
-    };
-
-    // Store user in app state
-    AppState.currentUser = user;
-    localStorage.setItem('albumrate_user', JSON.stringify(user));
-
-    // Update navigation
-    updateNavigation();
-
-    // Show success message
-    showNotification('Registration successful! Welcome to AlbumRate.', 'success');
-
-    // Redirect to home
-    SPARouter.navigate('home');
+    // Call UserService register
+    if (typeof UserService !== 'undefined') {
+        UserService.register({
+            username: username,
+            email: email,
+            password: password,
+            first_name: firstName,
+            last_name: lastName
+        });
+    } else {
+        showNotification('UserService not available', 'danger');
+    }
 }
 
 /**

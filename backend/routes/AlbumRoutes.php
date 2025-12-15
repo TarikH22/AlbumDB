@@ -9,6 +9,9 @@ $albumService = new AlbumService();
  *      path="/albums",
  *      tags={"albums"},
  *      summary="Get all albums",
+ *      security={
+ *         {"bearerAuth": {}}
+ *      },
  *      @OA\Parameter(
  *          name="limit",
  *          in="query",
@@ -30,6 +33,7 @@ $albumService = new AlbumService();
  * )
  */
 Flight::route('GET /albums', function () use ($albumService) {
+    // Public endpoint - no authentication required
     $limit = Flight::request()->query['limit'] ?? null;
     $offset = Flight::request()->query['offset'] ?? 0;
     Flight::json($albumService->getAllAlbums($limit, $offset));
@@ -37,9 +41,92 @@ Flight::route('GET /albums', function () use ($albumService) {
 
 /**
  * @OA\Get(
+ *     path="/albums/top-rated",
+ *     tags={"albums"},
+ *     summary="Get top rated albums",
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Parameter(
+ *         name="limit",
+ *         in="query",
+ *         required=false,
+ *         description="Number of results",
+ *         @OA\Schema(type="integer", example=10)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Top rated albums"
+ *     )
+ * )
+ */
+Flight::route('GET /albums/top-rated', function () use ($albumService) {
+    // Public endpoint - no authentication required
+    $limit = Flight::request()->query['limit'] ?? 10;
+    Flight::json($albumService->getTopRatedAlbums($limit));
+});
+
+/**
+ * @OA\Get(
+ *     path="/albums/search",
+ *     tags={"albums"},
+ *     summary="Search albums",
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Parameter(
+ *         name="q",
+ *         in="query",
+ *         required=true,
+ *         description="Search term",
+ *         @OA\Schema(type="string", example="pink")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Search results"
+ *     )
+ * )
+ */
+Flight::route('GET /albums/search', function () use ($albumService) {
+    // Public endpoint - no authentication required
+    $searchTerm = Flight::request()->query['q'] ?? '';
+    Flight::json($albumService->searchAlbums($searchTerm));
+});
+
+/**
+ * @OA\Get(
+ *     path="/albums/genre/{genre}",
+ *     tags={"albums"},
+ *     summary="Get albums by genre",
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Parameter(
+ *         name="genre",
+ *         in="path",
+ *         required=true,
+ *         description="Genre name",
+ *         @OA\Schema(type="string", example="Rock")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Albums in the specified genre"
+ *     )
+ * )
+ */
+Flight::route('GET /albums/genre/@genre', function ($genre) use ($albumService) {
+    // Public endpoint - no authentication required
+    Flight::json($albumService->getAlbumsByGenre($genre));
+});
+
+/**
+ * @OA\Get(
  *     path="/albums/{id}",
  *     tags={"albums"},
  *     summary="Get album by ID",
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -54,6 +141,7 @@ Flight::route('GET /albums', function () use ($albumService) {
  * )
  */
 Flight::route('GET /albums/@id', function ($id) use ($albumService) {
+    // Public endpoint - no authentication required
     Flight::json($albumService->getAlbum($id));
 });
 
@@ -62,6 +150,9 @@ Flight::route('GET /albums/@id', function ($id) use ($albumService) {
  *     path="/albums",
  *     tags={"albums"},
  *     summary="Add a new album",
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
@@ -79,6 +170,7 @@ Flight::route('GET /albums/@id', function ($id) use ($albumService) {
  * )
  */
 Flight::route('POST /albums', function () use ($albumService) {
+    Flight::auth_middleware()->authorizeRoles([Roles::USER, Roles::ADMIN]);
     $data = Flight::request()->data->getData();
     Flight::json($albumService->createAlbum($data));
 });
@@ -88,6 +180,9 @@ Flight::route('POST /albums', function () use ($albumService) {
  *     path="/albums/{id}",
  *     tags={"albums"},
  *     summary="Update an existing album by ID",
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -111,6 +206,7 @@ Flight::route('POST /albums', function () use ($albumService) {
  * )
  */
 Flight::route('PUT /albums/@id', function ($id) use ($albumService) {
+    Flight::auth_middleware()->authorizeRoles([Roles::USER, Roles::ADMIN]);
     $data = Flight::request()->data->getData();
     Flight::json($albumService->updateAlbum($id, $data));
 });
@@ -120,6 +216,9 @@ Flight::route('PUT /albums/@id', function ($id) use ($albumService) {
  *     path="/albums/{id}",
  *     tags={"albums"},
  *     summary="Delete an album by ID",
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -134,37 +233,18 @@ Flight::route('PUT /albums/@id', function ($id) use ($albumService) {
  * )
  */
 Flight::route('DELETE /albums/@id', function ($id) use ($albumService) {
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN]);
     Flight::json($albumService->deleteAlbum($id));
 });
 
 /**
  * @OA\Get(
- *     path="/albums/search",
+ *     path="/albums/recent",
  *     tags={"albums"},
- *     summary="Search albums",
- *     @OA\Parameter(
- *         name="q",
- *         in="query",
- *         required=true,
- *         description="Search term",
- *         @OA\Schema(type="string", example="pink")
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Search results"
- *     )
- * )
- */
-Flight::route('GET /albums/search', function () use ($albumService) {
-    $searchTerm = Flight::request()->query['q'] ?? '';
-    Flight::json($albumService->searchAlbums($searchTerm));
-});
-
-/**
- * @OA\Get(
- *     path="/albums/top-rated",
- *     tags={"albums"},
- *     summary="Get top rated albums",
+ *     summary="Get recent albums",
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
  *     @OA\Parameter(
  *         name="limit",
  *         in="query",
@@ -174,32 +254,76 @@ Flight::route('GET /albums/search', function () use ($albumService) {
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="Top rated albums"
+ *         description="Recent albums"
  *     )
  * )
  */
-Flight::route('GET /albums/top-rated', function () use ($albumService) {
-    $limit = Flight::request()->query['limit'] ?? 10;
-    Flight::json($albumService->getTopRatedAlbums($limit));
-});
-
 Flight::route('GET /albums/recent', function () use ($albumService) {
+    Flight::auth_middleware()->authorizeRoles([Roles::USER, Roles::ADMIN]);
     $limit = Flight::request()->query['limit'] ?? 10;
     Flight::json($albumService->getRecentAlbums($limit));
 });
 
-Flight::route('GET /albums/genre/@genre', function ($genre) use ($albumService) {
-    Flight::json($albumService->getAlbumsByGenre($genre));
-});
-
+/**
+ * @OA\Get(
+ *     path="/albums/artist/{artist}",
+ *     tags={"albums"},
+ *     summary="Get albums by artist",
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Parameter(
+ *         name="artist",
+ *         in="path",
+ *         required=true,
+ *         description="Artist name",
+ *         @OA\Schema(type="string", example="Pink Floyd")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Albums by the specified artist"
+ *     )
+ * )
+ */
 Flight::route('GET /albums/artist/@artist', function ($artist) use ($albumService) {
+    Flight::auth_middleware()->authorizeRoles([Roles::USER, Roles::ADMIN]);
     Flight::json($albumService->getAlbumsByArtist($artist));
 });
 
+/**
+ * @OA\Get(
+ *     path="/genres",
+ *     tags={"albums"},
+ *     summary="Get all genres",
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of all genres"
+ *     )
+ * )
+ */
 Flight::route('GET /genres', function () use ($albumService) {
+    Flight::auth_middleware()->authorizeRoles([Roles::USER, Roles::ADMIN]);
     Flight::json($albumService->getAllGenres());
 });
 
+/**
+ * @OA\Get(
+ *     path="/artists",
+ *     tags={"albums"},
+ *     summary="Get all artists",
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of all artists"
+ *     )
+ * )
+ */
 Flight::route('GET /artists', function () use ($albumService) {
+    Flight::auth_middleware()->authorizeRoles([Roles::USER, Roles::ADMIN]);
     Flight::json($albumService->getAllArtists());
 });

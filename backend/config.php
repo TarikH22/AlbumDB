@@ -1,31 +1,38 @@
 <?php
-class Database
+
+
+// Set the reporting
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL ^ (E_NOTICE | E_DEPRECATED));
+
+
+class Config
 {
-    private static $host = '127.0.0.1';
-    private static $dbName = 'albumDB';
-    private static $username = 'root';
-    private static $password = 'Tarik123';
-    private static $dbPort = 3306;
-    private static $connection = null;
-
-
-    public static function connect()
+    public static function DB_NAME()
     {
-        if (self::$connection === null) {
-            try {
-                self::$connection = new PDO(
-                    "mysql:host=" . self::$host . ";port=" . self::$dbPort . ";dbname=" . self::$dbName,
-                    self::$username,
-                    self::$password,
-                    [
-                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-                    ]
-                );
-            } catch (PDOException $e) {
-                die("Connection failed: " . $e->getMessage());
-            }
-        }
-        return self::$connection;
+        return 'albumDB';
+    }
+    public static function DB_PORT()
+    {
+        return  3306;
+    }
+    public static function DB_USER()
+    {
+        return 'root';
+    }
+    public static function DB_PASSWORD()
+    {
+        return 'root'; //Tarik123
+    }
+    public static function DB_HOST()
+    {
+        return '127.0.0.1';
+    }
+
+
+    public static function JWT_SECRET()
+    {
+        return 'tarik_secret_key';
     }
 }

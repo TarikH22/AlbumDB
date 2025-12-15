@@ -252,4 +252,39 @@ class UserService extends BaseService
 
         return $this->successResponse(null, 'User account deactivated successfully');
     }
+
+    public function getAllUsers($limit = null, $offset = 0)
+    {
+        $users = $this->userDAO->getAll($limit, $offset);
+
+        return $this->successResponse([
+            'users' => $users,
+            'count' => count($users)
+        ]);
+    }
+
+    public function getStats()
+    {
+        // Get user count
+        $users = $this->userDAO->getAll();
+        $userCount = count($users);
+
+        // Get total ratings count
+        require_once __DIR__ . '/../dao/RatingDAO.php';
+        $ratingDAO = new RatingDAO();
+        $allRatings = $ratingDAO->getAll();
+        $ratingCount = count($allRatings);
+
+        // Get total reviews count
+        require_once __DIR__ . '/../dao/ReviewDAO.php';
+        $reviewDAO = new ReviewDAO();
+        $allReviews = $reviewDAO->getAll();
+        $reviewCount = count($allReviews);
+
+        return $this->successResponse([
+            'total_users' => $userCount,
+            'total_ratings' => $ratingCount,
+            'total_reviews' => $reviewCount
+        ]);
+    }
 }
