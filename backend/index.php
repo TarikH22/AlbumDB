@@ -1,6 +1,7 @@
 <?php
 
 require './vendor/autoload.php';
+require __DIR__ . '/config.php';
 
 require __DIR__ . '/services/AuthService.php';
 require __DIR__ . '/MiddleWare/AuthMiddleware.php';
@@ -30,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 Flight::register('auth_service', 'AuthService');
 Flight::register('auth_middleware', "AuthMiddleware");
 
+//globalni middleware za provjeru JWT tokena applied to all routes, calls authmiddleware::verifyToken
 Flight::route('/*', function () {
     $url = Flight::request()->url;
     error_log("Requested URL: " . $url);
@@ -79,7 +81,6 @@ Flight::route('/*', function () {
     }
 });
 
-require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/routes/AlbumRoutes.php';
 require_once __DIR__ . '/routes/UserRoutes.php';
 require_once __DIR__ . '/routes/RatingRoutes.php';
