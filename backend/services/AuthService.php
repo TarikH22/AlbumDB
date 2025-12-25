@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . "/BaseService.php";
-require_once __DIR__ . '/../dao/AuthDao.php';
+require_once __DIR__ . '/../dao/AuthDAO.php';
 require_once __DIR__ . "/../utils/Roles.php";
 
 use Firebase\JWT\JWT;
