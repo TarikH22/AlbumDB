@@ -6,7 +6,7 @@ CREATE TABLE users (
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     avatar_url VARCHAR(255) DEFAULT 'https://via.placeholder.com/200x200?text=User',
-    roles VARCHAR(10) DEFAULT 'USER',   -- ✔ added here
+    roles VARCHAR(10) DEFAULT 'USER',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_login TIMESTAMP NULL,
@@ -47,7 +47,7 @@ CREATE TABLE tracks (
 
 
 CREATE TABLE ratings (
-    rating_id INT AUTO_INCREMENT PRIMARY PRIMARY KEY,
+    rating_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     album_id INT NOT NULL,
     rating DECIMAL(3,1) NOT NULL CHECK (rating >= 0 AND rating <= 10),

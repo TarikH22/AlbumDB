@@ -11,28 +11,28 @@ class Config
 {
     public static function DB_NAME()
     {
-        return 'albumDB';
+        return getenv('DB_NAME') ?: 'albumDB';
     }
     public static function DB_PORT()
     {
-        return  3306;
+        return getenv('DB_PORT') ?: 3306;
     }
     public static function DB_USER()
     {
-        return 'root';
+        return getenv('DB_USER') ?: 'root';
     }
     public static function DB_PASSWORD()
     {
-        return 'root'; //Tarik123
+        return getenv('DB_PASSWORD') ?: 'Tarik123';
     }
     public static function DB_HOST()
     {
-        return '127.0.0.1';
+        return getenv('DB_HOST') ?: '127.0.0.1';
     }
 
 
     public static function JWT_SECRET()
     {
-        return 'tarik_secret_key';
+        return getenv('JWT_SECRET') ?: 'tarik_secret_key';
     }
 }
