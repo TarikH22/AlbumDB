@@ -102,7 +102,7 @@ function loadAdminAlbums() {
         const row = `
                     <tr>
                         <td>${album.album_id}</td>
-                        <td><img src="${album.cover_image_url || "assets/images/albums/default.jpg"}" alt="${album.title}" style="width: 50px; height: 50px; object-fit: cover;"></td>
+                        <td><img src="${album.cover_url || "assets/images/albums/default.jpg"}" alt="${album.title}" style="width: 50px; height: 50px; object-fit: cover;"></td>
                         <td>${album.title}</td>
                         <td>${album.artist}</td>
                         <td>${album.genre}</td>
@@ -131,11 +131,25 @@ function loadAdminAlbums() {
  */
 function loadAdminTracks(albumId) {
   TrackService.getByAlbum(albumId)
-    .then((tracks) => {
+    .then((response) => {
+      // Extract the tracks array from the response
+      let tracks;
+      if (response.data && response.data.tracks) {
+        tracks = response.data.tracks;
+      } else if (response.tracks) {
+        tracks = response.tracks;
+      } else if (Array.isArray(response.data)) {
+        tracks = response.data;
+      } else if (Array.isArray(response)) {
+        tracks = response;
+      } else {
+        tracks = [];
+      }
+      
       const tbody = $("#admin-tracks-list");
       tbody.empty();
 
-      if (tracks.length === 0) {
+      if (!tracks || !Array.isArray(tracks) || tracks.length === 0) {
         tbody.html('<tr><td colspan="6" class="text-center">No tracks found for this album</td></tr>');
         return;
       }
@@ -237,10 +251,14 @@ function populateAlbumDropdowns() {
  * Set up event handlers for admin forms
  */
 function setupAdminEventHandlers() {
+  console.log("Setting up admin event handlers");
+  
   // Save album button
   $("#save-album-btn").off("click").on("click", function () {
+    console.log("Save album button clicked");
     const form = $("#add-album-form")[0];
     if (!form.checkValidity()) {
+      console.log("Form validation failed");
       form.reportValidity();
       return;
     }
@@ -250,15 +268,20 @@ function setupAdminEventHandlers() {
       artist: $("#album-artist").val(),
       genre: $("#album-genre").val(),
       year: parseInt($("#album-year").val()),
-      cover_image_url: $("#album-cover").val() || null,
+      cover_url: $("#album-cover").val() || null,
       description: $("#album-description").val() || null,
     };
 
+    console.log("Album data being sent:", albumData);
+
     AlbumService.create(albumData).then(() => {
+      console.log("Album created successfully");
       $("#addAlbumModal").modal("hide");
       $("#add-album-form")[0].reset();
       loadAdminAlbums();
       populateAlbumDropdowns();
+    }).catch((error) => {
+      console.error("Error creating album:", error);
     });
   });
 
@@ -271,7 +294,7 @@ function setupAdminEventHandlers() {
       $("#edit-album-artist").val(album.artist);
       $("#edit-album-genre").val(album.genre);
       $("#edit-album-year").val(album.year);
-      $("#edit-album-cover").val(album.cover_image_url);
+      $("#edit-album-cover").val(album.cover_url);
       $("#edit-album-description").val(album.description);
       $("#editAlbumModal").modal("show");
     });
@@ -291,7 +314,7 @@ function setupAdminEventHandlers() {
       artist: $("#edit-album-artist").val(),
       genre: $("#edit-album-genre").val(),
       year: parseInt($("#edit-album-year").val()),
-      cover_image_url: $("#edit-album-cover").val() || null,
+      cover_url: $("#edit-album-cover").val() || null,
       description: $("#edit-album-description").val() || null,
     };
 
