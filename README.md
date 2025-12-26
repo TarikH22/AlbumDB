@@ -6,7 +6,6 @@ A full-stack web application for discovering, rating, and reviewing music albums
 
 - **Frontend:** https://marvelous-taiyaki-c507df.netlify.app/
 - **Backend API:** https://albumdb-b5ap2.ondigitalocean.app/
-- **API Documentation:** https://albumdb-b5ap2.ondigitalocean.app/public/v1/docs/
 
 ## ✨ Features
 
