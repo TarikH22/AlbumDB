@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . "/BaseService.php";
-require_once __DIR__ . '/../dao/AuthDao.php';
+require_once __DIR__ . '/../dao/AuthDAO.php';
 require_once __DIR__ . "/../utils/Roles.php";
 
 use Firebase\JWT\JWT;
@@ -21,13 +21,29 @@ class AuthService extends BaseService
     }
     public function register($entity)
     {
+        // Validate required fields
         if (empty($entity['email']) || empty($entity['password'])) {
             return ['success' => false, 'error' => 'Email and password are required.'];
         }
 
+        if (empty($entity['username'])) {
+            return ['success' => false, 'error' => 'Username is required.'];
+        }
+
+        if (empty($entity['first_name']) || empty($entity['last_name'])) {
+            return ['success' => false, 'error' => 'First name and last name are required.'];
+        }
+
+        // Check if email already exists
         $email_exists = $this->auth_dao->get_user_by_email($entity['email']);
         if ($email_exists) {
             return ['success' => false, 'error' => 'Email already registered.'];
+        }
+
+        // Check if username already exists
+        $username_exists = $this->auth_dao->get_user_by_username($entity['username']);
+        if ($username_exists) {
+            return ['success' => false, 'error' => 'Username already taken. Please choose another.'];
         }
 
         try {
@@ -49,10 +65,13 @@ class AuthService extends BaseService
         } catch (PDOException $e) {
             // Handle duplicate entry error
             if ($e->getCode() == 23000) {
-                return ['success' => false, 'error' => 'Email already registered. Please use a different email.'];
+                return ['success' => false, 'error' => 'Email or username already registered. Please use different values.'];
             }
+            // Log the actual error for debugging
+            error_log("Registration PDOException: " . $e->getMessage());
             return ['success' => false, 'error' => 'Registration failed. Please try again.'];
         } catch (Exception $e) {
+            error_log("Registration Exception: " . $e->getMessage());
             return ['success' => false, 'error' => 'Registration failed. Please try again.'];
         }
     }

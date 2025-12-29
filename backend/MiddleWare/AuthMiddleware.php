@@ -33,8 +33,23 @@ class AuthMiddleware
 
         // If user is not set, verify token first
         if (!$user) {
-            $headers = getallheaders();
-            $authHeader = $headers['Authorization'] ?? null;
+            // Try multiple methods to get the Authorization header
+            $authHeader = null;
+            
+            // Method 1: Check $_SERVER
+            if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+                $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+            } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+                $authHeader = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+            } elseif (function_exists('apache_request_headers')) {
+                $headers = apache_request_headers();
+                $headers = array_change_key_case($headers, CASE_LOWER);
+                $authHeader = $headers['authorization'] ?? null;
+            } elseif (function_exists('getallheaders')) {
+                $headers = getallheaders();
+                $headers = array_change_key_case($headers, CASE_LOWER);
+                $authHeader = $headers['authorization'] ?? null;
+            }
 
             if (!$authHeader) {
                 Flight::halt(401, 'Missing authentication token');
